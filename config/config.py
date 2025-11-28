@@ -67,5 +67,68 @@ def cargar_estilos_premium():
             margin-top: 4rem;
             border-radius: 15px 15px 0 0;
         }
+        
+        /* 🆕 MEJORAS ESPECÍFICAS PARA MÓVIL */
+        @media (max-width: 768px) {
+            .header-premium {
+                padding: 1.5rem 1rem !important;
+            }
+            .header-premium h1 {
+                font-size: 1.8rem !important;
+            }
+            .metric-card {
+                padding: 1rem 0.5rem !important;
+                margin: 0.5rem 0 !important;
+            }
+            
+            /* GRÁFICOS MÁS GRANDES EN MÓVIL */
+            .stPlotlyChart {
+                min-height: 520px !important;
+            }
+            
+            /* TOOLTIPS MÁS LEGIBLES */
+            .js-plotly-plot .plotly .hoverlayer .hovertext {
+                font-size: 14px !important;
+                padding: 8px !important;
+                background: rgba(255, 255, 255, 0.95) !important;
+                border-radius: 8px !important;
+                border: 1px solid #e0e0e0 !important;
+            }
+            
+            /* TÍTULOS MÁS GRANDES */
+            .js-plotly-plot .plotly .gtitle {
+                font-size: 18px !important;
+                font-weight: 600 !important;
+            }
+            
+            /* EJES MÁS LEGIBLES */
+            .js-plotly-plot .plotly .xtitle, 
+            .js-plotly-plot .plotly .ytitle {
+                font-size: 14px !important;
+            }
+            
+            /* LEYENDAS MÁS ACCESIBLES */
+            .js-plotly-plot .plotly .legend {
+                font-size: 12px !important;
+                background: rgba(255, 255, 255, 0.9) !important;
+                border-radius: 6px !important;
+                padding: 5px !important;
+            }
+        }
+        
+        /* 🆕 ASEGURAR QUE LOS GRÁFICOS USEN TODO EL ANCHO */
+        .stPlotlyChart {
+            width: 100% !important;
+        }
+        
+        /* 🆕 CONTENEDOR RESPONSIVE MEJORADO */
+        .plotly-graph-div.js-plotly-plot {
+            width: 100% !important;
+        }
+        
+        /* 🆕 MEJORAR INTERACCIÓN TÁCTIL */
+        .js-plotly-plot .plotly .main-svg {
+            touch-action: pan-x pan-y !important;
+        }
     </style>
     """, unsafe_allow_html=True)

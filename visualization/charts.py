@@ -71,62 +71,85 @@ def crear_grafico_evolucion_interactivo(_datos, cooperativa, es_movil=False):
         else:
             fechas = valores.index
 
+        # OPTIMIZACIÓN PARA MÓVIL: Menos puntos para mejor performance
+        if es_movil and len(fechas) > 24:
+            step = max(1, len(fechas) // 12)  # Máximo 12 puntos en móvil
+            mask = np.arange(0, len(fechas), step)
+            fechas = fechas.iloc[mask]
+            valores = valores.iloc[mask]
+
         # Configuración de ticks según dispositivo
         tickvals, ticktext = None, None
         if len(fechas) > 1:
-            n_ticks = min(6 if es_movil else 8, len(fechas))  # Menos ticks en móvil
+            n_ticks = min(6 if es_movil else 8, len(fechas))
             idxs = np.linspace(0, len(fechas) - 1, n_ticks, dtype=int)
             tickvals = [fechas.iloc[i] for i in idxs]
             ticktext = [pd.to_datetime(d).strftime('%b %Y') for d in tickvals]
 
         fig = make_subplots(specs=[[{"secondary_y": False}]])
         
+        # LÍNEAS MÁS GRUESAS Y MARKERS MÁS GRANDES EN MÓVIL
+        line_width = 4 if es_movil else 3
+        marker_size = 8 if es_movil else 6
+        
         fig.add_trace(
             go.Scatter(
                 x=fechas, y=valores,
                 mode='lines+markers',
                 name='Mora Contable',
-                line=dict(color='#0052A5', width=3 if not es_movil else 2),
-                marker=dict(size=6 if not es_movil else 4, color='#0052A5'),
+                line=dict(color='#0052A5', width=line_width),
+                marker=dict(size=marker_size, color='#0052A5'),
                 hovertemplate='<b>%{x|%b %Y}</b><br>Mora: %{y:.3f}<extra></extra>'
             ),
             secondary_y=False
         )
         
         if len(serie.dropna()) > 12:
-            media_movil = serie.rolling(window=12, min_periods=1).mean().loc[valores.index]
+            media_movil = serie.rolling(window=12, min_periods=1).mean()
+            # Aplicar el mismo filtro para media móvil
+            if es_movil and len(fechas) > 24:
+                media_movil = media_movil.iloc[mask]
+            else:
+                media_movil = media_movil.loc[valores.index]
+                
             fig.add_trace(
                 go.Scatter(
                     x=fechas, y=media_movil,
                     mode='lines',
                     name='Media Móvil (12M)',
-                    line=dict(color='#D32F2F', width=2 if not es_movil else 1.5, dash='dash'),
+                    line=dict(color='#D32F2F', width=3 if not es_movil else 2.5, dash='dash'),
                     hovertemplate='<b>%{x|%b %Y}</b><br>Media Móvil: %{y:.3f}<extra></extra>'
                 ),
                 secondary_y=False
             )
         
-        # CONFIGURACIÓN RESPONSIVE
+        # CONFIGURACIÓN MEJORADA PARA MÓVIL
         if es_movil:
             fig.update_layout(
                 title=f'📈 {cooperativa}',
                 xaxis_title='Fecha',
                 yaxis_title='Índice de Mora',
                 hovermode='x unified',
-                height=400,  # Altura optimizada para móvil
+                height=500,  # MÁS ALTO para móvil
                 showlegend=True,
                 plot_bgcolor='rgba(248,249,250,0.8)',
                 paper_bgcolor='rgba(255,255,255,0.9)',
-                font=dict(color='#003366', size=10),
-                margin=dict(l=40, r=40, t=60, b=60),
+                font=dict(color='#003366', size=12),  # FUENTE MÁS GRANDE
+                margin=dict(l=60, r=40, t=80, b=80),  # MÁRGENES MÁS GRANDES
                 legend=dict(
                     orientation="h",
                     yanchor="bottom",
                     y=1.02,
                     xanchor="center",
                     x=0.5,
-                    font=dict(size=9)
+                    font=dict(size=12),  # LEYENDA MÁS GRANDE
+                    bgcolor='rgba(255,255,255,0.8)'  # FONDO PARA MEJOR LEGIBILIDAD
                 )
+            )
+            
+            # TOOLTIPS MÁS LEGIBLES EN MÓVIL
+            fig.update_traces(
+                hovertemplate='<b>%{x|%b %Y}</b><br>Valor: %{y:.3f}<extra></extra>'
             )
         else:
             fig.update_layout(
@@ -146,7 +169,7 @@ def crear_grafico_evolucion_interactivo(_datos, cooperativa, es_movil=False):
             fig.update_xaxes(
                 tickvals=tickvals, 
                 ticktext=ticktext, 
-                tickangle=45 if not es_movil else 90  # Más vertical en móvil
+                tickangle=45 if not es_movil else 90
             )
         
         return fig
