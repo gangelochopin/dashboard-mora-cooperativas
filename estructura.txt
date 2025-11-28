@@ -1,0 +1,20 @@
+Monitoreo Mora Cooperativas/
+│
+├── app.py                          
+├── config/
+│   └── config.py                  
+├── data/
+│   └── data_loader.py              
+├── analysis/
+│   └── risk_analysis.py            
+├── visualization/
+│   └── charts.py                   
+├── components/
+│   ├── header.py                   
+│   ├── sidebar.py                  
+│   ├── metrics.py                  
+│   └── footer.py                   
+├── utils/
+│   └── helpers.py                  
+├── requirements.txt                
+└── indice_mora.csv                 
