@@ -1,5 +1,5 @@
 """
-ASFI - SISTEMA DE MONITOREO FINANCIERO
+MONITOREO FINANCIERO DE MORA 
 Dashboard de Índice de Mora - Cooperativas Supervisadas
 Archivo Principal
 """
@@ -12,7 +12,11 @@ from components.sidebar import crear_sidebar
 from components.metrics import crear_metricas_principales
 from data.data_loader import cargar_datos, identificar_cooperativas
 from analysis.risk_analysis import analizar_riesgo
-from visualization.charts import crear_grafico_evolucion_interactivo, crear_grafico_torta_interactivo
+from visualization.charts import (
+    crear_grafico_evolucion_interactivo, 
+    crear_grafico_torta_interactivo,
+    crear_grafico_individual_elegante
+)
 import matplotlib.pyplot as plt
 import numpy as np
 from utils.device_detector import es_dispositivo_movil, obtener_configuracion_dispositivo
@@ -52,7 +56,7 @@ def main():
     tab1, tab2, tab3 = st.tabs([
         "📊 Dashboard General", 
         "🔍 Análisis por Cooperativa", 
-        "📈 Reporte Ejecutivo"
+        "📈 Reporte Resumido"
     ])
     
     with tab1:
@@ -60,73 +64,154 @@ def main():
         st.markdown("---")
         st.markdown("### 📈 Evolución del Índice de Mora por Cooperativa")
         
-        # Gráficos matplotlib
-        n_cols = 3
-        n_rows = (len(cooperativas) + n_cols - 1) // n_cols
-        height_per_row = 5.5
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(22, height_per_row * n_rows))
-        fig.patch.set_facecolor('#ffffff')
-        axes = np.array(axes).reshape(-1)
+        # SISTEMA DE PAGINACIÓN ELEGANTE
+        # Configuración de paginación
+        graficos_por_pagina = 4
+        total_paginas = (len(cooperativas) + graficos_por_pagina - 1) // graficos_por_pagina
         
-        colores_corporativos = ['#0052A5', '#D32F2F', '#388E3C', '#FF9800', '#7B1FA2', '#0097A7']
+        # Estado de la página actual
+        if 'pagina_actual' not in st.session_state:
+            st.session_state.pagina_actual = 1
         
-        for i, cooperativa in enumerate(cooperativas):
-            ax = axes[i]
-            serie = datos[cooperativa]
-            mask = serie.notna()
-            fechas_validas = datos.loc[mask, 'Fecha_Corte']
-            valores_validos = serie[mask]
-            
-            if len(valores_validos) == 0:
-                ax.text(0.5, 0.5, 'SIN DATOS', transform=ax.transAxes,
-                        ha='center', va='center', fontsize=12, color='#999')
-                ax.set_title(f'{cooperativa}', fontsize=11, fontweight='bold', color='#666')
-                ax.set_facecolor('#f8f9fa')
-                ax.set_ylim(0, 0.2)
-                continue
-            
-            color_serie = colores_corporativos[i % len(colores_corporativos)]
-            ax.plot(fechas_validas, valores_validos,
-                    linewidth=1.6, color=color_serie, marker='o', markersize=4, alpha=0.85)
-            
-            # Media móvil
-            if len(serie.dropna()) > 12:
-                try:
-                    ma = serie.rolling(window=12, min_periods=1).mean()
-                    ma_valid = ma[mask]
-                    ax.plot(fechas_validas, ma_valid, linewidth=2.0, color='#003366', alpha=0.8, linestyle='--')
-                except Exception:
-                    pass
-            
-            # Configuración del gráfico
-            ax.set_facecolor('#ffffff')
-            for spine in ax.spines.values():
-                spine.set_color('#e0e0e0')
-                spine.set_linewidth(0.8)
-            
-            mora_promedio = valores_validos.mean()
-            color_titulo = '#D32F2F' if mora_promedio > 0.1 else '#FF9800' if mora_promedio > 0.05 else '#388E3C'
-            ax.set_title(f'{cooperativa}', fontsize=12, fontweight='bold', color=color_titulo, pad=8)
-            
-            from matplotlib.dates import AutoDateLocator, ConciseDateFormatter
-            locator = AutoDateLocator(minticks=4, maxticks=8)
-            formatter = ConciseDateFormatter(locator)
-            ax.xaxis.set_major_locator(locator)
-            ax.xaxis.set_major_formatter(formatter)
-            ax.tick_params(axis='x', rotation=30, labelsize=9, colors='#666')
-            ax.tick_params(axis='y', labelsize=9, colors='#666')
-            ax.grid(True, alpha=0.28, color='#e0e0e0', linestyle='-', linewidth=0.5)
-            ax.set_ylim(bottom=0)
+        # Controles de paginación elegantes
+        st.markdown("""
+        <style>
+        .pagination-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 8px 16px;
+            margin: 2px;
+        }
+        .pagination-btn:hover {
+            background-color: #e9ecef;
+        }
+        </style>
+        """, unsafe_allow_html=True)
         
-        # Ocultar axes sobrantes
-        for j in range(len(cooperativas), len(axes)):
-            axes[j].set_visible(False)
+        col1, col2, col3, col4, col5 = st.columns([2, 1, 1, 1, 2])
         
-        plt.suptitle('EVOLUCIÓN DEL ÍNDICE DE MORA - PANORAMA DEL SISTEMA',
-                     fontsize=16, fontweight='bold', color='#003366', y=0.98)
-        plt.tight_layout()
-        plt.subplots_adjust(top=0.93, bottom=0.05)
-        st.pyplot(fig)
+        with col2:
+            if st.button("◀️ Anterior", use_container_width=True, key="prev_btn") and st.session_state.pagina_actual > 1:
+                st.session_state.pagina_actual -= 1
+                st.rerun()
+        
+        with col3:
+            st.markdown(f"""
+            <div style="text-align: center; padding: 8px; background: #f8f9fa; border-radius: 5px;">
+                <strong>Página {st.session_state.pagina_actual} de {total_paginas}</strong>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col4:
+            if st.button("Siguiente ▶️", use_container_width=True, key="next_btn") and st.session_state.pagina_actual < total_paginas:
+                st.session_state.pagina_actual += 1
+                st.rerun()
+        
+        st.markdown("---")
+        
+        # Calcular qué cooperativas mostrar en esta página
+        inicio_idx = (st.session_state.pagina_actual - 1) * graficos_por_pagina
+        fin_idx = inicio_idx + graficos_por_pagina
+        cooperativas_pagina = cooperativas[inicio_idx:fin_idx]
+        
+        # Crear 2 columnas para los gráficos (2x2 grid)
+        cols = st.columns(2)
+        
+        for i, cooperativa in enumerate(cooperativas_pagina):
+            col_idx = i % 2
+            with cols[col_idx]:
+                # Crear contenedor elegante para cada gráfico
+                with st.container():
+                    # Header del gráfico con color de riesgo
+                    serie = datos[cooperativa]
+                    valores_validos = serie.dropna()
+                    
+                    if len(valores_validos) == 0:
+                        st.error(f"⛔ {cooperativa} - Sin datos")
+                        continue
+                    
+                    ultimo_valor = valores_validos.iloc[-1]
+                    
+                    # Determinar color del header según riesgo
+                    if ultimo_valor > 0.1:
+                        color_header = '#e74c3c'
+                        icono_riesgo = '🔴'
+                    elif ultimo_valor > 0.05:
+                        color_header = '#f39c12'
+                        icono_riesgo = '🟡'
+                    else:
+                        color_header = '#27ae60'
+                        icono_riesgo = '🟢'
+                    
+                    st.markdown(f"""
+                    <div style="background: {color_header}; color: white; padding: 8px 12px; 
+                             border-radius: 5px 5px 0 0; margin-bottom: -10px;">
+                        <strong>{icono_riesgo} {cooperativa}</strong>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Crear gráfico elegante usando la nueva función
+                    fig = crear_grafico_individual_elegante(datos, cooperativa, es_movil)
+                    
+                    if fig:
+                        # Mostrar el gráfico
+                        st.plotly_chart(fig, use_container_width=True, config={
+                            'displayModeBar': False  # Más elegante sin barra de herramientas
+                        })
+                        
+                        # Métricas elegantes debajo del gráfico
+                        promedio = valores_validos.mean()
+                        max_valor = valores_validos.max()
+                        tendencia = "↗️" if ultimo_valor > promedio else "↘️" if ultimo_valor < promedio else "➡️"
+                        
+                        col_met1, col_met2, col_met3 = st.columns(3)
+                        with col_met1:
+                            st.metric(
+                                label="Actual", 
+                                value=f"{ultimo_valor:.1%}",
+                                delta=f"{tendencia}"
+                            )
+                        with col_met2:
+                            st.metric(
+                                label="Promedio", 
+                                value=f"{promedio:.1%}"
+                            )
+                        with col_met3:
+                            st.metric(
+                                label="Máximo", 
+                                value=f"{max_valor:.1%}"
+                            )
+                    else:
+                        st.error("Error al generar el gráfico")
+        
+        # Navegación inferior elegante
+        st.markdown("---")
+        st.caption(f"📊 Mostrando cooperativas {inicio_idx + 1} a {min(fin_idx, len(cooperativas))} de {len(cooperativas)} totales")
+        
+        # Botones de navegación al final
+        if total_paginas > 1:
+            col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
+            with col_btn1:
+                if st.button("⏪ Primera", use_container_width=True, key="first_btn") and st.session_state.pagina_actual > 1:
+                    st.session_state.pagina_actual = 1
+                    st.rerun()
+            with col_btn2:
+                # Selector de página
+                pagina_seleccionada = st.selectbox(
+                    "Ir a página:",
+                    options=range(1, total_paginas + 1),
+                    index=st.session_state.pagina_actual - 1,
+                    key="page_selector",
+                    label_visibility="collapsed"
+                )
+                if pagina_seleccionada != st.session_state.pagina_actual:
+                    st.session_state.pagina_actual = pagina_seleccionada
+                    st.rerun()
+            with col_btn3:
+                if st.button("Última ⏩", use_container_width=True, key="last_btn") and st.session_state.pagina_actual < total_paginas:
+                    st.session_state.pagina_actual = total_paginas
+                    st.rerun()
     
     with tab2:
         st.markdown(f"### 🔍 Resultados individual: **{cooperativa_seleccionada}**")

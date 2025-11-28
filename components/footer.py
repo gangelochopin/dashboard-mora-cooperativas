@@ -16,7 +16,7 @@ def crear_footer_premium():
             </div>
             <div style="text-align: right;">
                 <p style="margin: 0; font-size: 0.9rem; font-weight: 500;">
-                    Desarrollado por Gustavo Angelo Zabaleta
+                    Desarrollado por: Gustavo Angelo Zabaleta
                 </p>
                 <p style="margin: 0.3rem 0 0 0; font-size: 0.8rem; opacity: 0.8;">
                     Actualizado: {fecha_actual}

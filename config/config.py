@@ -1,12 +1,13 @@
 """
-CONFIGURACIÓN Y ESTILOS DEL DASHBOARD ASFI
+CONFIGURACIÓN Y ESTILOS DEL DASHBOARD 
 """
 
 import streamlit as st
 
 def configurar_aplicacion():
+    
     st.set_page_config(
-        page_title="ASFI - Monitor Financiero Avanzado",
+        page_title="AUTOMATIZACION DE INDICE DE MORA",
         page_icon="🏛️",
         layout="wide",
         initial_sidebar_state="expanded"
@@ -116,17 +117,17 @@ def cargar_estilos_premium():
             }
         }
         
-        /* 🆕 ASEGURAR QUE LOS GRÁFICOS USEN TODO EL ANCHO */
+        /* ASEGURAR QUE LOS GRÁFICOS USEN TODO EL ANCHO */
         .stPlotlyChart {
             width: 100% !important;
         }
         
-        /* 🆕 CONTENEDOR RESPONSIVE MEJORADO */
+        /* CONTENEDOR RESPONSIVE MEJORADO */
         .plotly-graph-div.js-plotly-plot {
             width: 100% !important;
         }
         
-        /* 🆕 MEJORAR INTERACCIÓN TÁCTIL */
+        /* MEJORAR INTERACCIÓN TÁCTIL */
         .js-plotly-plot .plotly .main-svg {
             touch-action: pan-x pan-y !important;
         }
