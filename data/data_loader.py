@@ -9,7 +9,7 @@ import streamlit as st
 @st.cache_data(ttl=3600)
 def cargar_datos():
     try:
-        datos = pd.read_csv('indice_mora.csv')
+        datos = pd.read_parquet('indice_mora.parquet')
         
         # Normalizar columna de fecha
         if 'Fecha_Corte' in datos.columns:
