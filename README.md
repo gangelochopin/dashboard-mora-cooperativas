@@ -1,15 +1,60 @@
-## 📘 Descripción 
+<div align="center">
 
-Este repositorio contiene un proceso automatizado para el dashboard del **Índice de Mora** de las cooperativas de **Ahorro y Crédito en Bolivia**, con frecuencia mensual desde **2005 hasta 2025 octubre**. Los datos provienen de los **Estados Financieros Mensuales publicados por ASFI**. Cada vez que se publica un nuevo corte mensual, el dashboard en **Streamlit** se actualiza automáticamente.
+# 🇧🇴 Monitor de Mora - Cooperativas de A Y C Bolivia
 
-Previamente, se realiza la limpieza de las series históricas de datos. Finalmente, todo se presenta en un dashboard interactivo en Streamlit, que permite analizar:
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Status](https://img.shields.io/badge/Actualizaci%C3%B3n-Mensual-orange?style=for-the-badge)
 
-- Evolución mensual de la mora por cooperativa  
-- Comparaciones históricas  
-- Alertas y tendencias relevantes  
+<p align="center">
+  <strong>Análisis automatizado del indicador Mora en Cooperativas de Ahorro y Crédito.</strong><br>
+  Periodo: <i>2005 - Octubre 2025</i>
+</p>
 
-Este desarrollo busca visualizar los datos de información de mora **clara, accesible y de análisis inmediato**, facilitando el seguimiento de la morosidad que es una proxy del riesgo crediticio.
+<a href="https://dashboard-mora-cooperativas.streamlit.app/">
+  <img src="https://img.shields.io/badge/VER%20DASHBOARD-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Ver Dashboard"/>
+</a>
+<a href="https://www.linkedin.com/in/gangelo">
+  <img src="https://img.shields.io/badge/CONECTAR-LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
+</a>
 
-*Nota.- Se pone umbrales inferiores al 5% como bajo, por el promedio general, este parámetro es arbitrario, solo con fines de comparación.
- vea el streamlit en: https://dashboard-mora-cooperativas.streamlit.app/
- Sitio de linkedin: www.linkedin.com/in/gangelo
+</div>
+
+---
+
+## 📘 Descripción del Proyecto
+
+Este repositorio aloja un **pipeline automatizado** diseñado para monitorear el **Índice de Mora** de las Cooperativas de Ahorro y Crédito en Bolivia. 
+
+El sistema ingesta, procesa y visualiza datos provenientes de los **Estados Financieros Mensuales oficiales**. La estructura está diseñada para detectar nuevos cortes mensuales y actualizar automáticamente el nuevo reporte.
+
+### 🚀 Funcionalidades Principales
+
+| Característica | Descripción |
+| :--- | :--- |
+| **🔄 Automatización** | Actualización automática del dashboard al publicarse nueva data. |
+| **🧹 ETL** | Limpieza y normalización de series históricas (2005 - Presente). |
+| **📊 Análisis Interactivo** | Evolución mensual, comparaciones históricas y detección de tendencias. |
+| **⚠️ Sistema de Alertas** | Identificación visual de cooperativas con indicadores fuera del promedio. |
+
+---
+
+## 🧠 Valor Analítico
+
+Este desarrollo busca democratizar el acceso a la información financiera, transformando datos crudos en **inteligencia analitica, clara y accesible**. Facilita el seguimiento de la morosidad como un *proxy* fundamental del **riesgo crediticio** en el sector financiero.
+
+> **Nota Técnica:** Se han establecido umbrales de referencia (ej. <5% como nivel bajo) basados en el promedio general del sistema. Estos parámetros son referenciales y sirven para facilitar la comparación visual entre entidades.
+
+---
+
+<div align="center">
+
+### 📸 Vista Previa
+
+<img src="https://via.placeholder.com/800x400.png?text=Vista+Previa+del+Dashboard" width="100%" alt="Dashboard Preview">
+
+<br>
+
+Hecho por <a href="https://www.linkedin.com/in/gangelo"><strong>@Angelo</strong></a>
+
+</div>
