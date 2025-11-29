@@ -49,12 +49,8 @@ Este desarrollo busca democratizar el acceso a la información financiera, trans
 
 <div align="center">
 
-### 📸 Vista Previa
-
-<img src="https://dashboard-mora-cooperativas.streamlit.app/" alt="Dashboard Preview">
-
 <br>
 
-Hecho por <a href="https://www.linkedin.com/in/gangelo"><strong>@Angelo</strong></a>
+Hecho por <a href="https://www.linkedin.com/in/gangelo"><strong>@angelo</strong></a>
 
 </div>
