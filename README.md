@@ -8,6 +8,8 @@ Previamente se ha realizado la limpieza de datos de las series históricas y fin
 - Comparaciones históricas  
 - Alertas y tendencias relevantes  
 
-Este desarrollo busca visualizar los datos de información **clara, accesible y de análisis inmediato**, facilitando el seguimiento de la morosidad que es una proxy  en el sector cooperativo.
+Este desarrollo busca visualizar los datos de información **clara, accesible y de análisis inmediato**, facilitando el seguimiento de la morosidad que es una proxy del riesgo crediticio.
 
 *Nota.- Se pone umbrales inferiores al 5% como bajo, por el promedio general, este parámetro es arbitrario, solo con fines de comparación.
+ vea el streamlit en: https://dashboard-mora-cooperativas.streamlit.app/
+ Sitio de linkedin: www.linkedin.com/in/gangelo
