@@ -1,6 +1,6 @@
 """
-MONITOREO FINANCIERO DE MORA 
-Dashboard de Índice de Mora - Cooperativas Supervisadas
+MONITOREO MENSUAL DE MORA 
+Dashboard de Índice de Mora - Cooperativas de A Y C
 Archivo Principal
 """
 
@@ -65,7 +65,7 @@ def main():
         st.markdown("---")
         st.markdown("### 📈 Evolución del Índice de Mora por Cooperativa")
         
-        # SISTEMA DE PAGINACIÓN ELEGANTE
+        # SISTEMA DE PAGINACIÓN 
         # Configuración de paginación
         graficos_por_pagina = 4
         total_paginas = (len(cooperativas) + graficos_por_pagina - 1) // graficos_por_pagina
@@ -74,7 +74,7 @@ def main():
         if 'pagina_actual' not in st.session_state:
             st.session_state.pagina_actual = 1
         
-        # Controles de paginación elegantes
+        # Controles de paginación 
         st.markdown("""
         <style>
         .pagination-btn {
