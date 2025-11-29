@@ -1,6 +1,6 @@
 """
 GRÁFICOS INTERACTIVOS Y VISUALIZACIONES ELEGANTES
-Optimizado para Móviles (Responsive Design - Mobile First)
+Optimizado para Móviles (Leyenda Inferior)
 """
 
 import plotly.express as px
@@ -68,8 +68,7 @@ def crear_grafico_individual_elegante(datos, cooperativa, es_movil=False):
         hovertemplate='Promedio: <b>%{y:.2%}</b><extra></extra>'
     ))
     
-    # --- AJUSTE RESPONSIVO CRÍTICO ---
-    # En móvil: Más alto (380px) y márgenes laterales mínimos (10px)
+    # --- AJUSTE RESPONSIVO ---
     altura = 380 if es_movil else 320 
     margenes = dict(l=10, r=10, t=30, b=40) if es_movil else dict(l=50, r=30, t=50, b=70)
     
@@ -114,26 +113,19 @@ def crear_grafico_torta_interactivo(clasificacion_riesgo, es_movil=False):
         values=valores,
         hole=0.5,
         marker=dict(colors=colores),
-        # En móvil solo porcentaje para limpiar visualmente
         textinfo='percent' if es_movil else 'label+percent',
         hovertemplate='<b>%{label}</b><br>%{value} Coop.<br>%{percent}',
         textfont=dict(size=12, family='Arial')
     )])
     
     if es_movil:
-        # Leyenda abajo en horizontal para móvil
+        # Leyenda abajo
         fig.update_layout(
             title={'text': 'Distribución de Riesgo', 'x': 0.5, 'xanchor': 'center'},
             showlegend=True,
             height=400,
             margin=dict(t=50, b=20, l=10, r=10),
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=-0.2,
-                xanchor="center",
-                x=0.5
-            )
+            legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
         )
     else:
         fig.update_layout(
@@ -145,7 +137,7 @@ def crear_grafico_torta_interactivo(clasificacion_riesgo, es_movil=False):
     
     return fig
 
-# --- 3. GRÁFICO DETALLADO (El que se veía mal en la captura) ---
+# --- 3. GRÁFICO DETALLADO (CORREGIDO LEYENDA INFERIOR) ---
 def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
     """Gráfico principal grande con Media Móvil"""
     try:
@@ -160,7 +152,7 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
         else:
             fechas = valores.index
 
-        # OPTIMIZACIÓN MÓVIL: Reducir puntos si son demasiados
+        # OPTIMIZACIÓN MÓVIL
         if es_movil and len(fechas) > 30:
             step = 2
             fechas = fechas.iloc[::step]
@@ -192,7 +184,6 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
         # 2. Media Móvil (Tendencia)
         if len(serie.dropna()) > 12:
             media_movil = serie.rolling(window=12, min_periods=1).mean()
-            # Ajustar longitud si recortamos
             if es_movil and len(fechas) > 30:
                  media_movil = media_movil.iloc[::step]
             else:
@@ -206,7 +197,7 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
                 hovertemplate='Tendencia: %{y:.2%}<extra></extra>'
             ))
         
-        # --- SOLUCIÓN AL PROBLEMA DE VISUALIZACIÓN ---
+        # --- CONFIGURACIÓN DE ESTILO ---
         layout_args = dict(
             xaxis_title='', 
             yaxis_title='Índice de Mora' if not es_movil else '',
@@ -218,24 +209,25 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
         )
 
         if es_movil:
-            # CONFIGURACIÓN MÓVIL CORRECTA
+            # === CONFIGURACIÓN MÓVIL CORREGIDA ===
             fig.update_layout(
                 **layout_args,
-                title=None, # SIN TÍTULO INTERNO (Ya está afuera)
-                height=420, # ALTURA GENEROSA
-                margin=dict(l=10, r=10, t=10, b=40), # MÁRGENES MÍNIMOS
+                title=None, # SIN TÍTULO (Para ganar espacio arriba)
+                height=450, # Altura generosa
+                # MARGENES: Aumentamos 'b' (bottom) a 100px para que quepa la leyenda
+                margin=dict(l=10, r=10, t=10, b=100), 
                 showlegend=True,
                 legend=dict(
-                    orientation="h",       # LEYENDA HORIZONTAL
-                    yanchor="bottom",
-                    y=1.02,                # ARRIBA DEL GRÁFICO
+                    orientation="h",       # Horizontal
+                    yanchor="top",         # Anclar desde arriba de la caja...
+                    y=-0.25,               # ...hacia ABAJO del eje X (negativo)
                     xanchor="center",
                     x=0.5,
                     bgcolor='rgba(255,255,255,0)'
                 )
             )
         else:
-            # CONFIGURACIÓN ESCRITORIO
+            # === CONFIGURACIÓN ESCRITORIO ===
             fig.update_layout(
                 **layout_args,
                 title=dict(text=f'Evolución: {cooperativa}', font=dict(size=18), x=0.5, xanchor='center'),
