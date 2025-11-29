@@ -41,7 +41,7 @@ El sistema ingesta, procesa y visualiza datos provenientes de los **Estados Fina
 
 ## 🧠 Valor Analítico
 
-Este desarrollo busca democratizar el acceso a la información financiera, transformando datos crudos en **inteligencia analitica, clara y accesible**. Facilita el seguimiento de la morosidad como un *proxy* fundamental del **riesgo crediticio** en el sector financiero.
+Este desarrollo busca realizar el analisis de datos con **inteligencia analitica, clara y accesible**. Facilita el seguimiento de la morosidad como un *proxy* fundamental del **riesgo crediticio** en el sector financiero.
 
 > **Nota Técnica:** Se han establecido umbrales de referencia (ej. <5% como nivel bajo) basados en el promedio general del sistema. Estos parámetros son referenciales y sirven para facilitar la comparación visual entre entidades.
 
