@@ -28,36 +28,5 @@ def crear_sidebar(_cooperativas, _clasificacion_riesgo):
         st.write(f"**Cooperativas activas:** {len(_cooperativas) - len(_clasificacion_riesgo['INACTIVAS'])}")
         st.write(f"**Última actualización:** {datetime.datetime.now().strftime('%d/%m/%Y')}")
     
-# ---------------------------------------------------------
-    # SECCIÓN DE CONTADOR DE VISITAS 
-    # ---------------------------------------------------------
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### 🌐 Tráfico")
-    
-    import time
-    
-    # Obtenemos el tiempo actual para evitar la caché
-    timestamp = int(time.time())
-    
-    # URL base de tu aplicación
-    target_url = "https://dashboard-mora-cooperativas.streamlit.app"
-    
-    # Construimos la URL del contador con el truco anti-caché (&t=...)
-    # Usamos otro proveedor (visitor-badge.laobi.io) que suele ser más rápido y fiable
-    url_contador = f"https://visitor-badge.laobi.io/badge?page_id={target_url}&left_text=Visitas&right_color=%230052A5&left_bg_color=%23555555&t={timestamp}"
-    
-    st.sidebar.markdown(
-        f"""
-        <div style="display: flex; justify-content: center; margin-top: 10px;">
-            <img src="{url_contador}" alt="Contador de Visitas">
-        </div>
-        <div style="text-align: center; font-size: 0.8em; color: gray; margin-top: 5px;">
-            Monitor en tiempo real
-        </div>
-        """, 
-        unsafe_allow_html=True
-    )
-    # ---------------------------------------------------------
-
     
     return cooperativa_seleccionada

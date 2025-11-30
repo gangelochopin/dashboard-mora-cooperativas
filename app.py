@@ -66,15 +66,15 @@ def main():
         st.markdown("---")
         st.markdown("### 📈 Evolución del Índice de Mora por Cooperativa")
         
-        # 2. DEFINIR LA PAGINACIÓN Y CALLBACKS (Aquí está la corrección)
+        # 2. DEFINIR LA PAGINACIÓN Y CALLBACKS 
         graficos_por_pagina = 4
         total_paginas = (len(cooperativas) + graficos_por_pagina - 1) // graficos_por_pagina
         
-        # Inicializar estado si no existe
+        # Inicializar estado 
         if 'pagina_actual' not in st.session_state:
             st.session_state.pagina_actual = 1
 
-        # --- FUNCIONES CALLBACK (Para que los botones funcionen bien) ---
+        # --- FUNCIONES CALLBACK 
         def siguiente_pagina():
             if st.session_state.pagina_actual < total_paginas:
                 st.session_state.pagina_actual += 1

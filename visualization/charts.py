@@ -1,6 +1,6 @@
 """
-GRÁFICOS INTERACTIVOS Y VISUALIZACIONES ELEGANTES
-Optimizado para Móviles (Leyenda Inferior)
+GRÁFICOS INTERACTIVOS Y VISUALIZACIONES
+Optimizado para Móviles y Escritorio
 """
 
 import plotly.express as px
@@ -37,10 +37,8 @@ def crear_grafico_individual_elegante(datos, cooperativa, es_movil=False):
     
     fig = go.Figure()
     
-    # Cálculos básicos
     promedio = valores_validos.mean()
     
-    # Paleta de colores
     paleta_colores = [
         '#0052A5', '#D32F2F', '#7B1FA2', '#388E3C', '#F57C00', 
         '#5D4037', '#0288D1', '#C2185B', '#00796B', '#512DA8'
@@ -68,7 +66,6 @@ def crear_grafico_individual_elegante(datos, cooperativa, es_movil=False):
         hovertemplate='Promedio: <b>%{y:.2%}</b><extra></extra>'
     ))
     
-    # --- AJUSTE RESPONSIVO ---
     altura = 380 if es_movil else 320 
     margenes = dict(l=10, r=10, t=30, b=40) if es_movil else dict(l=50, r=30, t=50, b=70)
     
@@ -97,7 +94,8 @@ def crear_grafico_individual_elegante(datos, cooperativa, es_movil=False):
 
 # --- 2. GRÁFICO DE TORTA (Distribución) ---
 def crear_grafico_torta_interactivo(clasificacion_riesgo, es_movil=False):
-    """Gráfico de torta/donas"""
+    """Gráfico de torta/donas con diseño consistente para móvil y escritorio"""
+
     categorias = ['Alto Riesgo', 'Riesgo Moderado', 'Bajo Riesgo', 'Inactivas']
     valores = [
         len(clasificacion_riesgo.get('ALTO RIESGO', [])),
@@ -107,37 +105,52 @@ def crear_grafico_torta_interactivo(clasificacion_riesgo, es_movil=False):
     ]
     
     colores = ['#e74c3c', '#f39c12', '#27ae60', '#95a5a6']
-    
+
     fig = go.Figure(data=[go.Pie(
         labels=categorias,
         values=valores,
-        hole=0.5,
+        hole=0.52,
         marker=dict(colors=colores),
         textinfo='percent' if es_movil else 'label+percent',
         hovertemplate='<b>%{label}</b><br>%{value} Coop.<br>%{percent}',
         textfont=dict(size=12, family='Arial')
     )])
-    
+
     if es_movil:
-        # Leyenda abajo
         fig.update_layout(
-            title={'text': 'Distribución de Riesgo', 'x': 0.5, 'xanchor': 'center'},
+            title=dict(text='Distribución de Riesgo', x=0.5, xanchor='center'),
             showlegend=True,
-            height=400,
-            margin=dict(t=50, b=20, l=10, r=10),
-            legend=dict(orientation="h", yanchor="bottom", y=-0.2, xanchor="center", x=0.5)
+            height=380,
+            margin=dict(t=40, b=40, l=10, r=10),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.22,
+                xanchor="center",
+                x=0.5,
+                font=dict(size=11)
+            )
         )
+
     else:
         fig.update_layout(
-            title={'text': 'Distribución por Riesgo', 'x': 0.5, 'xanchor': 'center'},
+            title=dict(text='Distribución de Riesgo', x=0.5, xanchor='center'),
             showlegend=True,
-            height=400,
-            margin=dict(t=80, b=80, l=80, r=80)
+            height=420,
+            margin=dict(t=60, b=60, l=60, r=60),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.28,
+                xanchor="center",
+                x=0.5,
+                font=dict(size=12)
+            )
         )
-    
+
     return fig
 
-# --- 3. GRÁFICO DETALLADO (CORREGIDO LEYENDA INFERIOR) ---
+# --- 3. GRÁFICO DETALLADO ---
 def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
     """Gráfico principal grande con Media Móvil"""
     try:
@@ -146,13 +159,10 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
         if len(valores) == 0:
             return None
 
-        # Gestión de fechas
-        if 'Fecha_Corte' in datos.columns:
-            fechas = datos.loc[valores.index, 'Fecha_Corte']
-        else:
-            fechas = valores.index
+        fechas = datos['Fecha_Corte'].loc[valores.index] if 'Fecha_Corte' in datos.columns else valores.index
 
-        # OPTIMIZACIÓN MÓVIL
+        # Optimización móvil
+        step = 1
         if es_movil and len(fechas) > 30:
             step = 2
             fechas = fechas.iloc[::step]
@@ -166,12 +176,11 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
             tickvals = [fechas.iloc[i] for i in idxs]
 
         fig = make_subplots(specs=[[{"secondary_y": False}]])
-        
-        # Color dinámico
+
         paleta = ['#0052A5', '#D32F2F', '#388E3C', '#F57C00', '#5D4037']
         color_p = paleta[hash(cooperativa) % len(paleta)]
-        
-        # 1. Línea Principal
+
+        # Línea principal
         fig.add_trace(go.Scatter(
             x=fechas, y=valores,
             mode='lines+markers',
@@ -181,13 +190,13 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
             hovertemplate='<b>%{x|%b %Y}</b><br>%{y:.2%}<extra></extra>'
         ))
 
-        # 2. Media Móvil (Tendencia)
+        # Media móvil
         if len(serie.dropna()) > 12:
             media_movil = serie.rolling(window=12, min_periods=1).mean()
             if es_movil and len(fechas) > 30:
-                 media_movil = media_movil.iloc[::step]
+                media_movil = media_movil.iloc[::step]
             else:
-                 media_movil = media_movil.loc[valores.index]
+                media_movil = media_movil.loc[valores.index]
 
             fig.add_trace(go.Scatter(
                 x=fechas, y=media_movil,
@@ -196,8 +205,7 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
                 line=dict(color='#2c3e50', width=1.8, dash='dot'),
                 hovertemplate='Tendencia: %{y:.2%}<extra></extra>'
             ))
-        
-        # --- CONFIGURACIÓN DE ESTILO ---
+
         layout_args = dict(
             xaxis_title='', 
             yaxis_title='Índice de Mora' if not es_movil else '',
@@ -209,25 +217,22 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
         )
 
         if es_movil:
-            # === CONFIGURACIÓN MÓVIL CORREGIDA ===
             fig.update_layout(
                 **layout_args,
-                title=None, # SIN TÍTULO (Para ganar espacio arriba)
-                height=450, # Altura generosa
-                # MARGENES: Aumentamos 'b' (bottom) a 100px para que quepa la leyenda
-                margin=dict(l=10, r=10, t=10, b=100), 
+                title=None,
+                height=450,
+                margin=dict(l=10, r=10, t=10, b=100),
                 showlegend=True,
                 legend=dict(
-                    orientation="h",       # Horizontal
-                    yanchor="top",         # Anclar desde arriba de la caja...
-                    y=-0.25,               # ...hacia ABAJO del eje X (negativo)
+                    orientation="h",
+                    yanchor="top",
+                    y=-0.25,
                     xanchor="center",
                     x=0.5,
                     bgcolor='rgba(255,255,255,0)'
                 )
             )
         else:
-            # === CONFIGURACIÓN ESCRITORIO ===
             fig.update_layout(
                 **layout_args,
                 title=dict(text=f'Evolución: {cooperativa}', font=dict(size=18), x=0.5, xanchor='center'),
@@ -236,8 +241,8 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
                 showlegend=True,
                 legend=dict(orientation="v")
             )
-        
-        # Grid y Ejes
+
+        # Grid y ejes
         fig.update_xaxes(
             gridcolor='rgba(220, 220, 220, 0.5)', 
             tickfont=dict(size=10),
@@ -247,15 +252,15 @@ def crear_grafico_evolucion_interactivo(datos, cooperativa, es_movil=False):
             gridcolor='rgba(220, 220, 220, 0.5)', 
             zerolinecolor='rgba(200, 200, 200, 0.3)'
         )
-        
+
         if tickvals is not None:
-             fig.update_xaxes(
+            fig.update_xaxes(
                 tickvals=tickvals,
                 tickformat='%b %y' if es_movil else '%b %Y'
             )
-        
+
         return fig
-        
+
     except Exception as e:
         import streamlit as st
         st.error(f"Error gráfico: {e}")
