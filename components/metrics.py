@@ -6,7 +6,7 @@ import streamlit as st
 import numpy as np
 
 def crear_metricas_principales(_cooperativas, _clasificacion_riesgo, _datos):
-    st.markdown("### 📈 Panorama General del Sistema Financiero")
+    st.markdown("### 📈 Panorama Sistema Cooperativo")
     
     col1, col2, col3, col4 = st.columns(4)
     
