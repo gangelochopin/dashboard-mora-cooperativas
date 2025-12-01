@@ -1,11 +1,6 @@
 <div align="center">
 
-# 🇧🇴 Monitor de Mora - Cooperativas de A Y C Bolivia
-
-![Python](https://img.shields.io/badge/Python-3.9%2B-blue?style=for-the-badge&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
-![Status](https://img.shields.io/badge/Actualizaci%C3%B3n-Mensual-orange?style=for-the-badge)
-
+# Monitor de Mora - Cooperativas de A Y C Bolivia
 <p align="center">
   <strong>Análisis automatizado del indicador Mora en Cooperativas de Ahorro y Crédito.</strong><br>
   Periodo: <i>2005 - Octubre 2025</i>
